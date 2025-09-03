@@ -17,8 +17,8 @@ import {
 
 export function MySidebar() {
     return (
-        <div className="flex h-screen">
-            <Sidebar aria-label="Pendudukan">
+        <div className="flex h-screen rounded-none">
+            <Sidebar aria-label="Pendudukan" className="rounded-none">
                 <SidebarItems>
                     <SidebarItemGroup>
                         <SidebarItem href="#" icon={HiChartPie}>

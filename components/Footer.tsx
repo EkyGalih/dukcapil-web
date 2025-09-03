@@ -3,8 +3,8 @@ import { Footer, FooterCopyright, FooterLink, FooterLinkGroup } from "flowbite-r
 
 export function MyFooter() {
   return (
-    <Footer container>
-      <FooterCopyright href="#" by="Flowbite™" year={2022} />
+    <Footer container className="rounded-none">
+      <FooterCopyright href="#" by="Kependudukan" year={2022} />
       <FooterLinkGroup>
         <FooterLink href="#">About</FooterLink>
         <FooterLink href="#">Privacy Policy</FooterLink>
