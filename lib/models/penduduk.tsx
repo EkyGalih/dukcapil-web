@@ -1,3 +1,19 @@
+export interface Keluarga {
+    id: number;
+    nama_kepala_keluarga: string;
+}
+
+export interface Pendidikan {
+    id: number;
+    pendidikan_terakhir: string;
+    pendidikan_sedang_ditempuh?: string;
+}
+
+export interface Kesehatan {
+    id: number;
+    jaminan_sosial_kesehatan: string;
+}
+
 export interface Penduduk {
     id: number;
     keluarga_id: number;
@@ -17,4 +33,8 @@ export interface Penduduk {
     hubungan_dalam_keluarga: string;
     created_at: string;
     updated_at: string;
+
+    keluarga?: Keluarga;
+    pendidikan?: Pendidikan;
+    kesehatan?: Kesehatan;
 }

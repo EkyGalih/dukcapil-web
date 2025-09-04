@@ -12,7 +12,7 @@ export async function getPenduduk(): Promise<Penduduk[]> {
 }
 
 export async function getPendudukById(id: number): Promise<Penduduk> {
-    const res = await fetch(`${API_URL}/${id}`, { cache: "no-store"});
+    const res = await fetch(`${API_URL}/${id}/detail`, { cache: "no-store"});
     if (!res.ok) {
         throw new Error(`Gagal mengambil data penduduk dengan ID ${id}`);
     }

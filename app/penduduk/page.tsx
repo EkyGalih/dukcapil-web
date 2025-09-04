@@ -12,7 +12,8 @@ import {
     TableHeadCell,
     TableRow,
     Pagination,
-    Button
+    Button,
+    Spinner
 } from "flowbite-react";
 
 export default function PendudukPage() {
@@ -44,7 +45,9 @@ export default function PendudukPage() {
     }, [page]);
 
     if (loading) {
-        return <p className="p-4">Loading data penduduk...</p>
+        return <div className="p-4 text-center">
+            <Spinner aria-label="Loading data penduduk..." color="info" />
+        </div>
     }
 
     return (
