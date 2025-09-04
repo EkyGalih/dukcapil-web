@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Penduduk } from "@/lib/models/penduduk";
-import { HiUserGroup } from "react-icons/hi";
+import Link from "next/link";
 import { fetcher } from "@/lib/api";
 import {
     Table,
@@ -11,7 +11,8 @@ import {
     TableHead,
     TableHeadCell,
     TableRow,
-    Pagination
+    Pagination,
+    Button
 } from "flowbite-react";
 
 export default function PendudukPage() {
@@ -79,9 +80,12 @@ export default function PendudukPage() {
                             <TableCell>{p.pekerjaan}</TableCell>
                             <TableCell>{p.hubungan_dalam_keluarga}</TableCell>
                             <TableCell>
-                                <a href={`/penduduk/${p.id}/edit`} className="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                                    Detail
-                                </a>
+                                {/* <a href={`/penduduk/${p.id}/edit`} className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                                    Edit
+                                </a> */}
+                                <Link href={`/penduduk/${p.id}/edit`}>
+                                    <Button className="cursor-pointer" color="yellow" outline>Edit</Button>
+                                </Link>
                             </TableCell>
                         </TableRow>
                     ))}

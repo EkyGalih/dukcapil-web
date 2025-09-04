@@ -4,7 +4,11 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getPendudukById, updatePenduduk } from "@/lib/controllers/pendudukController";
 import { Penduduk } from "@/lib/models/penduduk";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import {
+    Button,
+    Label,
+    TextInput
+} from "flowbite-react";
 
 export default function EditPendudukPage() {
     const params = useParams();
@@ -35,7 +39,7 @@ export default function EditPendudukPage() {
     if (!penduduk) return <p>Loading...</p>
 
     return (
-        <form className="flex max-w-md flex-col gap-4">
+        <form className="grid w-full grid-cols gap-4 md:grid-cols-2">
             <div>
                 <div className="mb-2 block">
                     <Label htmlFor="nik">NIK</Label>
@@ -47,12 +51,8 @@ export default function EditPendudukPage() {
                     <Label htmlFor="nama_lengkap">Nama Lengkap</Label>
                 </div>
                 <TextInput id="nama_lengkap" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
+                <Button color="green" className="cursor-pointer">Submit</Button>
             </div>
-            <div className="flex items-center gap-2">
-                <Checkbox id="remember" />
-                <Label htmlFor="remember">Remember me</Label>
-            </div>
-            <Button type="submit">Submit</Button>
         </form>
     );
 }
