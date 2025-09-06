@@ -1,15 +1,19 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import "./../globals.css";
+
 import MyNavbar from "@/components/Navbar";
 import MySidebar from "@/components/Sidebar";
 import MyFooter from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "Sistem Kependudukan",
-  description: "Aplikasi pencatatan penduduk",
-};
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = cookies();
+  const token = cookieStore.get("token");
+
+  if (!token) {
+    redirect ("/login");
+  }
   return (
     <html lang="id">
       <head>
