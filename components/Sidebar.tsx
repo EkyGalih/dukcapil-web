@@ -17,11 +17,11 @@ import {
 
 export function MySidebar() {
     return (
-        <div className="flex h-screen rounded-none">
-            <Sidebar aria-label="Pendudukan" className="rounded-none">
+        <div className="flex h-screen">
+            <Sidebar aria-label="Pendudukan">
                 <SidebarItems>
                     <SidebarItemGroup>
-                        <SidebarItem href="#" icon={HiChartPie}>
+                        <SidebarItem href="/admin/dashboard" icon={HiChartPie}>
                             Dashboard
                         </SidebarItem>
                         {/* <SidebarCollapse icon={HiShoppingBag} label="E-commerce">
@@ -33,10 +33,10 @@ export function MySidebar() {
                         <SidebarItem href="#" icon={HiBookOpen}>
                             Pendataan
                         </SidebarItem>
-                        <SidebarItem href="/penduduk" icon={HiUser}>
+                        <SidebarItem href="/admin/penduduk" icon={HiUser}>
                             Penduduk
                         </SidebarItem>
-                        <SidebarItem href="/keluarga" icon={HiUserGroup}>
+                        <SidebarItem href="/admin/keluarga" icon={HiUserGroup}>
                             Keluarga
                         </SidebarItem>
                     </SidebarItemGroup>

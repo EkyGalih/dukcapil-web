@@ -1,17 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
+import { Button, Card, Checkbox, Label, TextInput, Alert } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { fetcher } from "@/lib/api";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
 
     try {
       const data = await fetcher("/auth/login", {
@@ -24,25 +26,34 @@ export default function LoginPage() {
       document.cookie = `token=${data.access_token}; Path=/; Max-Age=${60 * 60 * 24
         }; Secure; SameSite=Lax`;
 
-      router.push("/dashboard");
-    } catch (err) {
-      alert("Login failed");
+      router.push("/admin/dashboard");
+    } catch (err: any) {
+      const message = err?.message || err?.detail || "Login gagal. Perika kembali kredensial.";
+      setError(message);
       console.error(err);
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen bg-white">
       <Card className="w-full max-w-sm">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <h2 className="text-xl font-semibold text-center text-white">Login</h2>
+          {
+            error && (
+              <Alert color="failure">
+                <span className="font-medium">{error}</span>
+              </Alert>
+            )
+          }
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="email1">Your email</Label>
+              <Label htmlFor="email1">Email</Label>
             </div>
             <TextInput
               id="email1"
               type="email"
-              placeholder="name@flowbite.com"
+              placeholder="example@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -51,7 +62,7 @@ export default function LoginPage() {
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="password1">Your password</Label>
+              <Label htmlFor="password1">Kata Sandi</Label>
             </div>
             <TextInput
               id="password1"
@@ -64,10 +75,10 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-2">
             <Checkbox id="remember" />
-            <Label htmlFor="remember">Remember me</Label>
+            <Label htmlFor="remember">Ingat saya</Label>
           </div>
 
-          <Button type="submit">Submit</Button>
+          <Button color="green" type="submit">Masuk</Button>
         </form>
       </Card>
     </div>
