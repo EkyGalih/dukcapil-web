@@ -12,14 +12,6 @@ export default function LoginLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Login</title>
-      </head>
-      <body className="min-h-screen flex items-center justify-center bg-gray-50">
-        {children}
-      </body>
-    </html>
+    <main className="flex-1 w-full bg-transparent">{children}</main>
   );
 }

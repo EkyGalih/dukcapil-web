@@ -13,8 +13,9 @@ import {
 } from "flowbite-react";
 import { fetcher } from "@/lib/api";
 import { Profile } from "@/lib/models/profile";
-import { getCookie, deleteCookie } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
+import { deleteAuthToken } from "@/app/actions/auth";
+import { getClientCookie } from "@/lib/clientCookie";
 
 export function MyNavbar() {
     const [profile, setProfile] = useState<Profile | null>(null);
@@ -22,7 +23,7 @@ export function MyNavbar() {
 
     useEffect(() => {
         async function loadProfile() {
-            const token = getCookie("token");
+            const token = getClientCookie("token");
             if (!token) return;
 
             try {
@@ -39,8 +40,8 @@ export function MyNavbar() {
         loadProfile();
     }, []);
 
-    function handleSignOut() {
-        deleteCookie("token");
+    async function handleSignOut() {
+        await deleteAuthToken();
         router.replace("/login");
     }
 

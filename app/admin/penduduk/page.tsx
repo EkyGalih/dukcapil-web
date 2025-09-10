@@ -87,7 +87,7 @@ export default function PendudukPage() {
                                     Edit
                                 </a> */}
                                 <Link href={`/admin/penduduk/${p.id}/edit`}>
-                                    <Button className="cursor-pointer" color="yellow" outline>Edit</Button>
+                                    <Button className="cursor-pointer" color="yellow">Edit</Button>
                                 </Link>
                             </TableCell>
                         </TableRow>

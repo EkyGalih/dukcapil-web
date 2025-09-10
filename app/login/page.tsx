@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, Card, Checkbox, Label, TextInput, Alert } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { fetcher } from "@/lib/api";
+import { setAuthToken } from "../actions/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -23,8 +24,7 @@ export default function LoginPage() {
       });
 
       // Simpan token ke cookie (browser)
-      document.cookie = `token=${data.access_token}; Path=/; Max-Age=${60 * 60 * 24
-        }; Secure; SameSite=Lax`;
+      await setAuthToken(data.access_token);
 
       router.push("/admin/dashboard");
     } catch (err: any) {

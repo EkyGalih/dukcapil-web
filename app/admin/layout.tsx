@@ -4,21 +4,24 @@ import MyNavbar from "@/components/Navbar";
 import MySidebar from "@/components/Sidebar";
 import MyFooter from "@/components/Footer";
 
-import { getCookie } from "@/lib/cookies";
+import { getServerCookie } from "@/lib/serverCookie";
 import { redirect } from "next/navigation";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const token = getCookie("token");
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const token = await getServerCookie("token");
   if (!token) {
     redirect("/login");
   }
-  
+
   return (
-    <div className="h-screen">
+    <div className="flex min-h-screen">
+      {/* Sidebar kiri */}
       <MySidebar />
-      <div className="flex-1 flex flex-col min-h-screen">
+
+      {/* Konten kanan */}
+      <div className="flex flex-col flex-1 w-full">
         <MyNavbar />
-        <main className="flex-1 p-6 bg-grey-50">{children}</main>
+        <main className="flex-1 w-full p-6 bg-gray-50">{children}</main>
         <MyFooter />
       </div>
     </div>

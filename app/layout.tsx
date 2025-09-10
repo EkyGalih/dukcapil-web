@@ -14,9 +14,7 @@ export default function Layout({
     return (
         <html lang="id">
             <body className="min-h-screen flex flex-col">
-                <main className="flex-1 flex items-center justify-center">
-                    {children}
-                </main>
+                {children}
             </body>
         </html>
     );
