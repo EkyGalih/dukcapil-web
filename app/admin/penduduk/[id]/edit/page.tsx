@@ -9,13 +9,16 @@ import {
     Label,
     Radio,
     TextInput,
-    Datepicker
+    Datepicker,
+    Select,
+    Alert
 } from "flowbite-react";
 
 export default function EditPendudukPage() {
     const params = useParams();
     const id = Number(params.id);
     const [penduduk, setPenduduk] = useState<Penduduk | null>(null);
+    const [message, setMessage] = useState<{ type: "success" | "danger"; text: string } | null>(null);
 
     useEffect(() => {
         const load = async () => {
@@ -31,96 +34,142 @@ export default function EditPendudukPage() {
 
         try {
             await updatePenduduk(id, penduduk);
-            alert("Data updated successfully");
-        } catch (err) {
+            setMessage({
+                type: "success",
+                text: "Data penduduk berhasil diperbaharui"
+            });
+
+            setTimeout(() => {
+                setMessage(null);
+            }, 3000);
+        } catch (err: any) {
             console.error(err);
-            alert("Gagal update data");
+            setMessage({
+                type: "danger",
+                text: `Gagal memperbaharui data penduduk ${err.message || JSON.stringify(err)}`
+            });
+
+            setTimeout(() => {
+                setMessage(null);
+            }, 3000);
         }
     };
 
     if (!penduduk) return <p>Loading...</p>
 
     return (
-        <form className="grid w-full grid-cols gap-4 md:grid-cols-2">
-            <div>
-                <div className="mb-2 block">
-                    <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
+        <div>
+            {message && (
+                <Alert color={message.type == "success" ? "success" : "danger"}>
+                    <span className="font-medium">{message.text}</span>
+                </Alert>
+            )}
+            <form className="grid w-full grid-cols gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
+                <div>
+                    <div className="mb-2 block">
+                        <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
+                    </div>
+                    <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
+                    <div className="mb-2 block">
+                        <Label htmlFor="nik" color="black">NIK</Label>
+                    </div>
+                    <TextInput id="nik" color="white" type="text" value={penduduk.nik} onChange={(e) => setPenduduk({ ...penduduk, nik: e.target.value })} required />
+                    <div className="mb-2 block">
+                        <Label htmlFor="nik" color="black">Urutan NIK</Label>
+                    </div>
+                    <TextInput id="nik" color="white" type="number" value={penduduk.urutan_nik} onChange={(e) => setPenduduk({ ...penduduk, urutan_nik: e.target.value })} required />
+                    <div className="mb-2 block">
+                        <Label htmlFor="nik" color="black">Jenis Kelamin</Label>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                            <Radio id="P" name="jenis_kelamin" color="white" value="P" checked={penduduk.jenis_kelamin === "P"} onChange={(e) => setPenduduk({ ...penduduk, jenis_kelamin: e.target.value })} />
+                            <label htmlFor="P">Perempuan</label>
+                            <Radio id="L" name="jenis_kelamin" color="white" value="L" checked={penduduk.jenis_kelamin === "L"} onChange={(e) => setPenduduk({ ...penduduk, jenis_kelamin: e.target.value })} />
+                            <label htmlFor="L">Laki-laki</label>
+                        </div>
+                    </div>
+                    <div className="mb-2 block">
+                        <Label htmlFor="tempat_lahir" color="black">Tempat/Tanggal Lahir</Label>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className="flex w-full items-center gap-2">
+                            <TextInput id="tempat_lahir" color="white" type="text" value={penduduk.tempat_lahir} onChange={(e) => setPenduduk({ ...penduduk, tempat_lahir: e.target.value })} required />
+                            <Datepicker id="tanggal_lahir" color="white" language="id" labelTodayButton="Hari Ini" labelClearButton="Hapus" value={penduduk.tanggal_lahir ? new Date(penduduk.tanggal_lahir) : undefined} onChange={(e: any) => setPenduduk({ ...penduduk, tanggal_lahir: e.detail.date.toISOString().slice(0, 10) })} />
+                        </div>
+                    </div>
+                    <div className="mb-2 block">
+                        <Label htmlFor="agama" color="black">Agama</Label>
+                    </div>
+                    <Select id="agama" value={penduduk.agama} onChange={(e) => setPenduduk({ ...penduduk, agama: e.target.value })} color="white" required>
+                        <option>Pilih</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Kristen">Kristen</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Katolik">Katolik</option>
+                        <option value="Konghucu">Konghucu</option>
+                    </Select>
+                    <div className="mb-2 block">
+                        <Label htmlFor="status_pernikahan" color="black">Status Pernikahan</Label>
+                    </div>
+                    <Select id="status_pernikahan" value={penduduk.status_pernikahan} onChange={(e) => setPenduduk({ ...penduduk, status_pernikahan: e.target.value })} color="white" required>
+                        <option>Pilih</option>
+                        <option value="Belum Kawin">Belum Kawin</option>
+                        <option value="Kawin">Kawin</option>
+                        <option value="Cerai Hidup">Cerai Hidup</option>
+                        <option value="Cerai Mati">Cerai Mati</option>
+                    </Select>
+                    <div className="mb-2 block">
+                        <Label htmlFor="duda_janda" color="black">Duda/Janda</Label>
+                    </div>
+                    <Select id="duda_janda" color="white" value={penduduk.duda_janda} onChange={(e) => setPenduduk({ ...penduduk, duda_janda: e.target.value })} required>
+                        <option>Pilih</option>
+                        <option value="Duda">Duda</option>
+                        <option value="Janda">Janda</option>
+                    </Select>
                 </div>
-                <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nik" color="black">NIK</Label>
-                </div>
-                <TextInput id="nik" color="white" type="text" value={penduduk.nik} onChange={(e) => setPenduduk({ ...penduduk, nik: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nik" color="black">Urutan NIK</Label>
-                </div>
-                <TextInput id="nik" color="white" type="number" value={penduduk.urutan_nik} onChange={(e) => setPenduduk({ ...penduduk, urutan_nik: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nik" color="black">Jenis Kelamin</Label>
-                </div>
-                <div className="grid grid-cols-2 gap-2 mb-2">
-                    <div className="flex items-center gap-2">
-                        <Radio id="P" name="jenis_kelamin" color="white" value="P" checked={penduduk.jenis_kelamin === "P"} onChange={(e) => setPenduduk({ ...penduduk, jenis_kelamin: e.target.value })} />
-                        <label htmlFor="P">Perempuan</label>
-                        <Radio id="L" name="jenis_kelamin" color="white" value="L" checked={penduduk.jenis_kelamin === "L"} onChange={(e) => setPenduduk({ ...penduduk, jenis_kelamin: e.target.value })} />
-                        <label htmlFor="L">Laki-laki</label>
+                <div>
+                    <div className="mb-2 block">
+                        <Label htmlFor="Kepala Keluarga" color="black">Kepala Keluarga</Label>
+                    </div>
+                    <TextInput id="kepala_keluarga" color="white" type="text" value={penduduk.keluarga?.nama_kepala_keluarga ?? "-"} onChange={(e) => setPenduduk({ ...penduduk, keluarga: { ...penduduk.keluarga, nama_kepala_keluarga: e.target.value } })} required />
+                    <div className="mb-2 block">
+                        <Label htmlFor="golongan_darah" color="black">Golongan Darah</Label>
+                    </div>
+                    <Select id="golongan_darah" color="white" value={penduduk.golongan_darah} onChange={(e) => setPenduduk({ ...penduduk, golongan_darah: e.target.value })} required>
+                        <option>Pilih</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="AB">AB</option>
+                        <option value="O">O</option>
+                    </Select>
+                    <div className="mb-2 block">
+                        <Label htmlFor="pekerjaan" color="black">Pekerjaan</Label>
+                    </div>
+                    <TextInput id="pekerjaan" color="white" type="text" value={penduduk.pekerjaan} onChange={(e) => setPenduduk({ ...penduduk, pekerjaan: e.target.value })} required />
+                    <div className="grid grid-cols-2 gap-2">
+                        <div>
+                            <div className="mb-2 block">
+                                <Label htmlFor="nama_ayah" color="black">Nama Ayah</Label>
+                            </div>
+                            <TextInput id="nama_ayah" color="white" type="text" value={penduduk.nama_ayah} onChange={(e) => setPenduduk({ ...penduduk, nama_ayah: e.target.value })} required />
+                        </div>
+                        <div>
+                            <div className="mb-2 block">
+                                <Label htmlFor="nama_ibu" color="black">Nama Ibu</Label>
+                            </div>
+                            <TextInput id="nama_ibu" color="white" type="text" value={penduduk.nama_ibu} onChange={(e) => setPenduduk({ ...penduduk, nama_ibu: e.target.value })} required />
+                        </div>
+                    </div>
+                    <div className="mb-2 block">
+                        <Label htmlFor="hubungan_dalam_keluarga" color="black">Hubungan Dalam Keluarga</Label>
+                    </div>
+                    <TextInput id="hubungan_dalam_keluarga" color="white" type="text" value={penduduk.hubungan_dalam_keluarga} onChange={(e) => setPenduduk({ ...penduduk, hubungan_dalam_keluarga: e.target.value })} required />
+                    <div className="mb-2 block">
+                        <Button color="green" type="submit" className="cursor-pointer">Submit</Button>
                     </div>
                 </div>
-                <div className="mb-2 block">
-                    <Label htmlFor="tempat_lahir" color="black">Tempat/Tanggal Lahir</Label>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                    <div className="flex w-full items-center gap-2">
-                        <TextInput id="tempat_lahir" color="white" type="text" value={penduduk.tempat_lahir} onChange={(e) => setPenduduk({ ...penduduk, tempat_lahir: e.target.value })} required />
-                        <Datepicker id="tanggal_lahir" language="id" labelTodayButton="Hari Ini" labelClearButton="Hapus" value={penduduk.tanggal_lahir ? new Date(penduduk.tanggal_lahir) : undefined} onChange={(e: any) => setPenduduk({ ...penduduk, tanggal_lahir: e.detail.date.toISOString().slice(0, 10)})} />
-                    </div>
-                </div>
-                <div className="mb-2 block">
-                    <Label htmlFor="nik" color="black">NIK</Label>
-                </div>
-                <TextInput id="nik" color="white" type="text" value={penduduk.nik} onChange={(e) => setPenduduk({ ...penduduk, nik: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nik" color="black">NIK</Label>
-                </div>
-                <TextInput id="nik" color="white" type="text" value={penduduk.nik} onChange={(e) => setPenduduk({ ...penduduk, nik: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nik" color="black">NIK</Label>
-                </div>
-                <TextInput id="nik" color="white" type="text" value={penduduk.nik} onChange={(e) => setPenduduk({ ...penduduk, nik: e.target.value })} required />
-            </div>
-            <div>
-                <div className="mb-2 block">
-                    <Label htmlFor="Kepala Keluarga" color="black">Kepala Keluarga</Label>
-                </div>
-                <TextInput id="kepala_keluarga" color="white" type="text" value={penduduk.keluarga?.nama_kepala_keluarga ?? "-"} onChange={(e) => setPenduduk({ ...penduduk, keluarga: { ...penduduk.keluarga, nama_kepala_keluarga: e.target.value } })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
-                </div>
-                <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
-                </div>
-                <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
-                </div>
-                <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
-                </div>
-                <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
-                </div>
-                <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Label htmlFor="nama_lengkap" color="black">Nama Lengkap</Label>
-                </div>
-                <TextInput id="nama_lengkap" color="white" type="text" value={penduduk.nama_lengkap} onChange={(e) => setPenduduk({ ...penduduk, nama_lengkap: e.target.value })} required />
-                <div className="mb-2 block">
-                    <Button color="green" className="cursor-pointer">Submit</Button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     );
 }

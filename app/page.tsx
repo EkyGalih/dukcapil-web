@@ -11,7 +11,7 @@ export default function HomePage() {
                     Home
                 </BreadcrumbItem>
                 <BreadcrumbItem href="#">Projects</BreadcrumbItem>
-                <BreadcrumbItem>Flowbite React</BreadcrumbItem>
+                <BreadcrumbItem href="/login">Login</BreadcrumbItem>
             </Breadcrumb>
         </main>
     );

@@ -1,37 +1,39 @@
+import { fetcher } from "../api";
 import { Penduduk } from "../models/penduduk";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + "/penduduks";
+export async function getPenduduk(
+    page = 1,
+    size = 10,
+    search?: string,
+): Promise<{ items: Penduduk[]; pages: number }> {
+    const params = new URLSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+    });
 
-export async function getPenduduk(): Promise<Penduduk[]> {
-    const res = await fetch(API_URL, {cache: 'no-store'});
-    if (!res.ok) {
-        throw new Error("Gagal mengambil data penduduk");
+    if (search) {
+        params.append("search", search);
     }
 
-    return res.json();
+    const data = await fetcher(`/penduduks?${params.toString()}`);
+
+    // kalau backend sudah return { items, pages }
+    return {
+        items: data.items,
+        pages: data.pages,
+    };
 }
 
 export async function getPendudukById(id: number): Promise<Penduduk> {
-    const res = await fetch(`${API_URL}/${id}/detail`, { cache: "no-store"});
-    if (!res.ok) {
-        throw new Error(`Gagal mengambil data penduduk dengan ID ${id}`);
-    }
-
-    return res.json()
+    return fetcher(`/penduduks/${id}/detail`, {
+        method: "GET",
+        cache: 'no-store'
+    })
 }
 
 export async function updatePenduduk(id: number, data: Partial<Penduduk>): Promise<Penduduk> {
-    const res = await fetch(`${API_URL}/${id}`, {
+    return fetcher(`/penduduks/${id}`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-        throw new Error(`Gagal memperbarui data penduduk dengan ID ${id}`);
-    }
-
-    return res.json();
+        body: JSON.stringify(data)
+    })
 }
