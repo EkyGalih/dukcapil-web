@@ -1,31 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Card, Checkbox, Label, TextInput, Alert } from "flowbite-react";
+import { Button, Card, Checkbox, Label, TextInput, Alert, Spinner } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { fetcher } from "@/lib/api";
-import { setAuthToken } from "../actions/auth";
+import { LoginAction } from "../actions/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     try {
-      const data = await fetcher("/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      // Simpan token ke cookie (browser)
-      await setAuthToken(data.access_token);
-
+      const res = await LoginAction(username, password);
+      console.log(res);
+      
       router.push("/admin/dashboard");
     } catch (err: any) {
       const message = err?.message || err?.detail || "Login gagal. Perika kembali kredensial.";
@@ -48,24 +43,24 @@ export default function LoginPage() {
           }
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="email1">Email</Label>
+              <Label htmlFor="username">Username</Label>
             </div>
             <TextInput
-              id="email1"
-              type="email"
+              id="username"
+              type="text"
               placeholder="example@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="password1">Kata Sandi</Label>
+              <Label htmlFor="password">Kata Sandi</Label>
             </div>
             <TextInput
-              id="password1"
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -78,7 +73,17 @@ export default function LoginPage() {
             <Label htmlFor="remember">Ingat saya</Label>
           </div>
 
-          <Button color="green" type="submit">Masuk</Button>
+          <Button color="green" type="submit">
+            {loading ? (
+              <>
+                <Spinner aria-label="Loading..." color="white" size="sm" className="mr-2" />
+                Loading...
+              </>
+            ) : (
+              "Masuk"
+            )
+            }
+          </Button>
         </form>
       </Card>
     </div>

@@ -4,11 +4,12 @@ import MyNavbar from "@/components/Navbar";
 import MySidebar from "@/components/Sidebar";
 import MyFooter from "@/components/Footer";
 
-import { getServerCookie } from "@/lib/serverCookie";
 import { redirect } from "next/navigation";
+import { gerServcerCookieToken } from "../actions/auth";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const token = await getServerCookie("token");
+  const token = await gerServcerCookieToken();
+
   if (!token) {
     redirect("/login");
   }
