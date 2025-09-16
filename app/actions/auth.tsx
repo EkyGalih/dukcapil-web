@@ -14,27 +14,23 @@ export async function LoginAction(username: string, password: string) {
         body: JSON.stringify({ username, password }),
     });
 
+    let data: any;
+    try {
+        data = await res.json();
+    } catch {
+        data = null;
+    }
     if (!res.ok) {
-        let errorDetail = "";
-        try {
-            const errData = await res.json();
-            errorDetail = errData?.message ? JSON.stringify(errData.message) : await res.text();
-        } catch {
-            errorDetail = await res.text();
-        }
-
+        const errorDetail = data?.message || res.statusText || "Unknown error";
         throw new Error(`Login gagal:${errorDetail}`);
     }
 
-    const data = await res.json();
-    
-
     // set cookie on server
-    if (data.access_token) {
-        setAuthToken(data.access_token);
+    if (data?.access_token) {
+        await setAuthToken(data.access_token);
     }
 
-    return data;
+    return data as LoginResponse;
 }
 
 export async function setAuthToken(token: string) {
