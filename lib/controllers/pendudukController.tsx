@@ -15,7 +15,7 @@ export async function getPenduduk(
         params.append("search", search);
     }
 
-    const data = await fetcher(`/penduduks?${params.toString()}`);
+    const data = await fetcher(`/penduduk?${params.toString()}`);
 
     // kalau backend sudah return { items, pages }
     return {
@@ -25,15 +25,15 @@ export async function getPenduduk(
 }
 
 export async function getPendudukById(id: number): Promise<Penduduk> {
-    return fetcher(`/penduduks/${id}/detail`, {
+    return fetcher(`/penduduk/${id}`, {
         method: "GET",
         cache: 'no-store'
     })
 }
 
 export async function updatePenduduk(id: number, data: Partial<Penduduk>): Promise<Penduduk> {
-    return fetcher(`/penduduks/${id}`, {
-        method: "PUT",
+    return fetcher(`/penduduk/${id}`, {
+        method: "PATCH",
         body: JSON.stringify(data)
     })
 }

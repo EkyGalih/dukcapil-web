@@ -27,11 +27,8 @@ export function MyNavbar() {
             if (!token) return;
 
             try {
-                const me = await fetcher("/auth/me", {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                const me = await fetcher("/user/me");
+                
                 setProfile(me);
             } catch (error) {
                 console.error("Error fetching profile:", error);
