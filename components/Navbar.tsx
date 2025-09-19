@@ -28,7 +28,7 @@ export function MyNavbar() {
 
             try {
                 const me = await fetcher("/user/me");
-                
+
                 setProfile(me);
             } catch (error) {
                 console.error("Error fetching profile:", error);
